@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cenvo 6.0 Layout</title>
+  <link rel="stylesheet" href="style7.css" />
+  <script src="background.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+</head>
+
+<body>
+  <!-- Interaktiivinen tausta -->
+  <canvas id="bg"></canvas>
+
+  <!-- Auto-hide Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div class="logo">CV</div>
+      <nav>
+        <a href="overview.html" class="nav-link active" data-title="Overview"><i data-lucide="home"></i></a>
+        <a href="market.html" class="nav-link" data-title="Browse"><i data-lucide="shopping-bag"></i></a>
+        <a href="myprompts.html" class="nav-link" data-title="My Prompts"><i data-lucide="folder"></i></a>
+        <a href="addprompt.html" class="nav-link" data-title="Add Prompt"><i data-lucide="plus-circle"></i></a>
+        <a href="settings.html" class="nav-link" data-title="Settings"><i data-lucide="settings"></i></a>
+        <a href="chat.html" class="nav-link" data-title="AI Chat"><i data-lucide="message-circle"></i></a>
+        <a href="feedback.html" class="nav-link" data-title="Feedback"><i data-lucide="mail"></i></a>
+      </nav>
+      <button id="logout" class="logout-btn"><i data-lucide="log-out"></i></button>
+    </div>
+  </aside>
+
+  <!-- Pääsisältö -->
+  <main class="content">
+    <section class="welcome">
+      <h1>Welcome back, <span id="username">User</span></h1>
+      <p class="subtitle">Let’s see what’s new in your AI universe today.</p>
+    </section>
+    <section class="placeholder">
+      <p>This is the base layout — content will be injected here per page.</p>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Sidebar hover / expand logic
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.addEventListener("mouseenter", () => sidebar.classList.add("expanded"));
+    sidebar.addEventListener("mouseleave", () => sidebar.classList.remove("expanded"));
+
+    // Auth + username
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) return window.location.href = "login.html";
+      const user = data.session.user;
+      document.getElementById("username").textContent = user.user_metadata.full_name || "User";
+    });
+
+    // Logout
+    document.getElementById("logout").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

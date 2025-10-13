@@ -1,0 +1,138 @@
+/* === GLOBAL THEME === */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  background: transparent;
+  color: #e3e6ed;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* === BACKGROUND CANVAS === */
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: #0e1014;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 100vh;
+  background: rgba(10, 12, 16, 0.7);
+  border-right: 1px solid #1f2229;
+  backdrop-filter: blur(12px);
+  transition: width 0.3s ease;
+  z-index: 2;
+}
+
+.sidebar.expanded {
+  width: 220px;
+}
+
+.sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #00ffc8;
+  margin-bottom: 30px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  margin: 8px 0;
+  color: #b8bcc7;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #00ffc81a;
+  color: #00ffc8;
+}
+
+.nav-link::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 70px;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  color: #e3e6ed;
+}
+
+.sidebar.expanded .nav-link::after {
+  opacity: 1;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #00ffc8;
+  color: #00ffc8;
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #00ffc81a;
+}
+
+/* === MAIN CONTENT === */
+.content {
+  position: relative;
+  margin-left: 70px;
+  padding: 80px 60px;
+  z-index: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.expanded ~ .content {
+  margin-left: 220px;
+}
+
+.welcome h1 {
+  font-size: 2rem;
+  color: #00ffc8;
+}
+
+.subtitle {
+  color: #b3b8c3;
+  margin-top: 5px;
+}
+
+.placeholder {
+  margin-top: 60px;
+  color: #aaa;
+  font-size: 1rem;
+}
