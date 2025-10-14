@@ -66,12 +66,12 @@ export default function OverviewPage() {
           ...(prompts || []).slice(0, 2).map((p: any) => ({
             type: 'prompt',
             title: `New prompt "${p.title}" added`,
-            time: new Date(p.created_at).toRelativeTimeString?.() || 'Recently'
+            time: new Date(p.created_at).toLocaleDateString() || 'Recently'
           })),
           ...(purchases || []).slice(0, 2).map((p: any) => ({
             type: 'purchase',
             title: 'Prompt purchased',
-            time: new Date(p.created_at).toRelativeTimeString?.() || 'Recently'
+            time: new Date(p.created_at).toLocaleDateString() || 'Recently'
           }))
         ]
         setRecentActivity(activities)
