@@ -236,7 +236,7 @@ export default function OverviewPage() {
               <div className="text-white font-semibold text-lg">-</div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Recent Activity */}
         <motion.div
