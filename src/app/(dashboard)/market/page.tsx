@@ -21,7 +21,7 @@ export default function MarketPage() {
 
         let query = supabase
           .from('prompts')
-          .select('id, title, description, price, image_url, rating, downloads, created_at, category, status')
+          .select('id, title, description, price, image_url, downloads, created_at, category, status')
           .eq('status', 'published')
           .order('created_at', { ascending: false })
 
@@ -171,7 +171,6 @@ export default function MarketPage() {
               description={prompt.description}
               price={prompt.price}
               imageUrl={prompt.image_url}
-              rating={prompt.rating}
               downloads={prompt.downloads}
             />
           ))}
