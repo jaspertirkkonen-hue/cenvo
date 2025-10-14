@@ -4,12 +4,12 @@ import { ArrowRight, Sparkles, Zap, Shield, CheckCircle, Users, Star } from 'luc
 import dynamic from 'next/dynamic'
 
 // Dynamic imports for performance
-const MeshBG = dynamic(() => import('@/components/graphics/MeshBG').then(mod => ({ default: mod.MeshBG })), {
+const MeshBG = dynamic(() => import('@/components/graphics/MeshBG'), {
   loading: () => <div className="w-full h-full bg-slate-900/20" />,
   ssr: false
 })
 
-const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1').then(mod => ({ default: mod.AiCard1 })), {
+const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1'), {
   loading: () => <div className="w-full h-full bg-slate-900/20 animate-pulse" />,
   ssr: false
 })

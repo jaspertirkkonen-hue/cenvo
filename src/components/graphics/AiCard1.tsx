@@ -26,3 +26,5 @@ export function AiCard1({ className = "" }: { className?: string }) {
     </svg>
   )
 }
+
+export default AiCard1

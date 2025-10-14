@@ -25,3 +25,5 @@ export function MeshBG({ className = "" }: { className?: string }) {
     </svg>
   )
 }
+
+export default MeshBG

@@ -41,3 +41,5 @@ export function AiCard2({ className = "" }: { className?: string }) {
     </svg>
   )
 }
+
+export default AiCard2
