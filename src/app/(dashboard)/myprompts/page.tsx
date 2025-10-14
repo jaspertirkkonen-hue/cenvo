@@ -1,4 +1,7 @@
-import { Edit, Trash2, Eye, Download, MoreHorizontal } from 'lucide-react'
+import Image from 'next/image'
+import { Edit, Trash2, Eye, Download } from 'lucide-react'
+import { AiCard1 } from '@/components/graphics/AiCard1'
+import { AiCard2 } from '@/components/graphics/AiCard2'
 
 export default function MyPromptsPage() {
   const prompts = [
@@ -11,7 +14,8 @@ export default function MyPromptsPage() {
       status: 'Active',
       created: '2024-01-15',
       downloads: 120,
-      rating: 4.8
+      rating: 4.8,
+      image: '/images/ux.jpg'
     },
     {
       id: 2,
@@ -22,7 +26,8 @@ export default function MyPromptsPage() {
       status: 'Active',
       created: '2024-01-10',
       downloads: 85,
-      rating: 4.9
+      rating: 4.9,
+      image: '/images/curated.jpg'
     },
     {
       id: 3,
@@ -44,7 +49,8 @@ export default function MyPromptsPage() {
       status: 'Active',
       created: '2024-01-01',
       downloads: 67,
-      rating: 4.7
+      rating: 4.7,
+      image: '/images/pitch.jpg'
     }
   ]
 
@@ -76,84 +82,60 @@ export default function MyPromptsPage() {
         </div>
       </div>
 
-      {/* Prompts Table */}
-      <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-800/50">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Price</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Sales</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Revenue</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Created</th>
-                <th className="px-6 py-4 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-700">
-              {prompts.map((prompt) => (
-                <tr key={prompt.id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-white">{prompt.title}</div>
-                      <div className="text-sm text-slate-400">ID: {prompt.id}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#2563eb]/20 text-[#2563eb]">
-                      {prompt.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
-                    ${prompt.price.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-white">{prompt.sales}</div>
-                    <div className="text-xs text-slate-400">{prompt.downloads} downloads</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
-                    ${(prompt.sales * prompt.price).toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      prompt.status === 'Active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {prompt.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
-                    {new Date(prompt.created).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="text-[#2563eb] hover:text-blue-700 p-1">
-                        <Eye size={16} />
-                      </button>
-                      <button className="text-green-500 hover:text-green-700 p-1">
-                        <Edit size={16} />
-                      </button>
-                      <button className="text-slate-400 hover:text-white p-1">
-                        <MoreHorizontal size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Prompts Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {prompts.map((prompt) => (
+          <div key={prompt.id} className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden hover:border-[#2563eb]/50 transition-colors">
+            <div className="h-48 bg-slate-800 relative overflow-hidden">
+              {prompt.image ? (
+                <Image
+                  src={prompt.image}
+                  alt={prompt.title}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                prompt.id % 2 === 0 ? <AiCard1 className="w-full h-full" /> : <AiCard2 className="w-full h-full" />
+              )}
+              <div className="absolute top-4 right-4">
+                <div className={`px-2 py-1 rounded text-xs font-semibold ${
+                  prompt.status === 'Active' 
+                    ? 'bg-green-500 text-white' 
+                    : 'bg-red-500 text-white'
+                }`}>
+                  {prompt.status}
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-white mb-2">{prompt.title}</h3>
+              <p className="text-slate-400 text-sm mb-4">{prompt.category}</p>
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-2xl font-bold text-white">${prompt.price}</div>
+                <div className="text-sm text-slate-400">{prompt.sales} sales</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button className="flex-1 bg-[#2563eb] hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors">
+                  <Edit size={16} className="inline mr-1" />
+                  Edit
+                </button>
+                <button className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded text-sm transition-colors">
+                  <Eye size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Performance Chart */}
-      <div className="mt-8 bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
+      <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
         <h2 className="text-xl font-bold text-white mb-6">Performance Overview</h2>
         <div className="h-64 bg-slate-800 rounded-lg flex items-center justify-center">
           <div className="text-center">
-            <div className="text-4xl text-slate-400 mb-4">📊</div>
+            <div className="w-16 h-16 bg-[#2563eb] rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-xl">C</span>
+            </div>
             <p className="text-slate-400">Performance chart placeholder</p>
             <p className="text-sm text-slate-500 mt-2">Track your prompt performance over time</p>
           </div>

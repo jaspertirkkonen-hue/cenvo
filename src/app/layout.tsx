@@ -1,23 +1,69 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Navbar } from '@/components/Navbar'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-inter',
+  display: 'swap',
+  preload: true,
+})
 
 export const metadata: Metadata = {
-  title: 'Cenvo - AI Prompt Marketplace',
+  title: {
+    default: 'Cenvo - AI Prompt Marketplace',
+    template: '%s | Cenvo',
+  },
   description: 'Power Generative AI With Your Data. Make the best models with the best data.',
+  metadataBase: new URL('https://cenvo.io'),
+  openGraph: {
+    title: 'Cenvo - AI Prompt Marketplace',
+    description: 'Power Generative AI With Your Data. Make the best models with the best data.',
+    url: 'https://cenvo.io',
+    siteName: 'Cenvo',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cenvo - AI Prompt Marketplace',
+    description: 'Power Generative AI With Your Data',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} min-h-screen bg-[#030712] text-[#f1f5f9] antialiased`}>
-        <Navbar />
-        <main>
+      <head>
+        {/* Preconnect to external domains */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* DNS prefetch for performance */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        
+        {/* Favicon */}
+        <link rel="icon" href="/images/cenvo-logo.svg" type="image/svg+xml" />
+        
+        {/* Theme color for mobile browsers */}
+        <meta name="theme-color" content="#030712" />
+      </head>
+      <body className={`${inter.variable} font-sans min-h-screen bg-[#030712] text-[#f1f5f9] antialiased`}>
+        <div className="fixed inset-0 -z-10" aria-hidden="true">
+          <div className="absolute inset-0 opacity-60 will-change-transform bg-[radial-gradient(800px_600px_at_25%_35%,rgba(37,99,235,0.12),transparent_70%)]" />
+        </div>
+        <div className="relative">
           {children}
-        </main>
+        </div>
       </body>
     </html>
   )

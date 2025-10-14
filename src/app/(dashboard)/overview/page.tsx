@@ -1,5 +1,8 @@
 import { createServerSupabase } from '@/lib/supabase/server'
 import { DollarSign, TrendingUp, MessageSquare, BarChart3 } from 'lucide-react'
+import { KpiCard } from '@/components/cards/KpiCard'
+import { AiCard1 } from '@/components/graphics/AiCard1'
+import { AiCard2 } from '@/components/graphics/AiCard2'
 
 export default async function OverviewPage() {
   const supabase = createServerSupabase()
@@ -49,32 +52,27 @@ export default async function OverviewPage() {
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Account Value</h3>
-            <DollarSign className="h-6 w-6 text-[#2563eb]" />
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">${totalSales.toFixed(2)}</div>
-          <div className="text-sm text-slate-400">Total earnings</div>
-        </div>
-
-        <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">My Prompts</h3>
-            <MessageSquare className="h-6 w-6 text-[#2563eb]" />
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">{count}</div>
-          <div className="text-sm text-slate-400">Active prompts</div>
-        </div>
-
-        <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Performance</h3>
-            <TrendingUp className="h-6 w-6 text-[#2563eb]" />
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">+12.5%</div>
-          <div className="text-sm text-slate-400">This month</div>
-        </div>
+        <KpiCard
+          label="Account Value"
+          value={`$${totalSales.toFixed(2)}`}
+          icon={DollarSign}
+          change="+5% last month"
+          changeType="positive"
+        />
+        <KpiCard
+          label="My Prompts"
+          value={count}
+          icon={MessageSquare}
+          change="Active prompts"
+          changeType="neutral"
+        />
+        <KpiCard
+          label="Performance"
+          value="+12.5%"
+          icon={TrendingUp}
+          change="This month"
+          changeType="positive"
+        />
       </div>
 
       {/* Main Content Grid */}

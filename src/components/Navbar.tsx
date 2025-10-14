@@ -28,7 +28,9 @@ export function Navbar() {
     }`}>
       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-white">
-          <img src="/images/cenvo-logo.png" alt="Cenvo" className="h-8 w-8" />
+          <div className="w-8 h-8 bg-[#2563eb] rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">C</span>
+          </div>
           Cenvo
         </Link>
 

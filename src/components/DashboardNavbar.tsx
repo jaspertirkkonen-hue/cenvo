@@ -31,39 +31,14 @@ export function DashboardNavbar() {
   ]
 
   return (
-    <header className="bg-[#030712] border-b border-slate-800">
-      {/* Top Bar */}
-      <div className="bg-slate-900 px-6 py-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6 text-sm">
-            <span className="text-slate-400">Orders</span>
-            <span className="text-slate-400">Transfer Money</span>
-            <span className="text-slate-400">Messages 4</span>
-            <span className="text-slate-400">Logout</span>
-          </div>
-          <button className="bg-[#2563eb] hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">
-            Restart and Update
-          </button>
-        </div>
-      </div>
-
-      {/* Market Data Bar */}
-      <div className="bg-slate-800 px-6 py-2">
-        <div className="flex items-center gap-8 text-sm">
-          <span className="text-red-400">OMXH25 -0,02% 5 063,63</span>
-          <span className="text-green-400">DAX ▲+0,60% 24 387,93</span>
-          <span className="text-green-400">SP500F ▲+1,74% 6 709,75</span>
-          <span className="text-green-400">WTI-öljy ▲+0,40% 59,33</span>
-          <span className="text-red-400">EUR/USD -0,23% 1,16</span>
-        </div>
-      </div>
-
-      {/* Main Navigation */}
+    <header className="bg-[#030712] border-b border-slate-800 sticky top-0 z-50">
       <nav className="px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/overview" className="flex items-center gap-2">
-            <img src="/images/cenvo-logo.png" alt="Cenvo" className="h-8 w-8" />
+            <div className="w-8 h-8 bg-[#2563eb] rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">C</span>
+            </div>
             <span className="text-xl font-bold text-white">Cenvo</span>
           </Link>
 
@@ -73,23 +48,26 @@ export function DashboardNavbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`relative text-sm font-medium transition-colors ${
                   pathname === item.href
-                    ? 'text-[#2563eb] border-b-2 border-[#2563eb] pb-1'
+                    ? 'text-[#2563eb]'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 {item.label}
+                {pathname === item.href && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#2563eb] rounded-full" />
+                )}
               </Link>
             ))}
           </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
-            <button className="text-slate-400 hover:text-white">
+            <button className="text-slate-400 hover:text-white transition-colors">
               <Bell size={20} />
             </button>
-            <button className="text-slate-400 hover:text-white">
+            <button className="text-slate-400 hover:text-white transition-colors">
               <Search size={20} />
             </button>
             <div className="flex items-center gap-2">
@@ -100,7 +78,7 @@ export function DashboardNavbar() {
             </div>
             <button 
               onClick={handleLogout}
-              className="text-slate-400 hover:text-white text-sm"
+              className="text-slate-400 hover:text-white text-sm transition-colors"
             >
               <LogOut size={16} />
             </button>

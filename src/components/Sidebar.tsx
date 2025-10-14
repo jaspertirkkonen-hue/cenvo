@@ -46,7 +46,9 @@ export function Sidebar() {
       {/* Logo and Toggle */}
       <div className="h-16 flex items-center px-3 justify-between">
         <div className="flex items-center gap-3">
-          <img src="/images/cenvo-logo.png" alt="Cenvo" className="h-8" />
+          <div className="w-8 h-8 bg-[#2563eb] rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">C</span>
+          </div>
           {expanded && <span className="text-lg font-bold text-white">Cenvo</span>}
         </div>
         <button onClick={toggle} className="p-2 rounded-md border border-slate-600/30 hover:border-slate-400 transition-colors">

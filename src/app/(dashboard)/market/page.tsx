@@ -1,4 +1,5 @@
-import { Search, Filter, Star, Eye, Download } from 'lucide-react'
+import { Search, Filter } from 'lucide-react'
+import { PromptCard } from '@/components/cards/PromptCard'
 
 export default function MarketPage() {
   const prompts = [
@@ -54,8 +55,7 @@ export default function MarketPage() {
       price: 79.99,
       rating: 4.5,
       downloads: 423,
-      author: 'Crypto Pro',
-      image: '/images/crypto.jpg'
+      author: 'Crypto Pro'
     },
     {
       id: 6,
@@ -120,61 +120,7 @@ export default function MarketPage() {
       {/* Prompts Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {prompts.map((prompt) => (
-          <div key={prompt.id} className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden hover:border-[#2563eb]/50 transition-colors group">
-            {/* Image */}
-            <div className="h-48 bg-slate-800 relative overflow-hidden">
-              <img 
-                src={prompt.image} 
-                alt={prompt.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute top-4 right-4">
-                <div className="bg-[#2563eb] text-white px-2 py-1 rounded text-xs font-semibold">
-                  {prompt.category}
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-white group-hover:text-[#2563eb] transition-colors">
-                  {prompt.title}
-                </h3>
-                <div className="text-2xl font-bold text-white">${prompt.price}</div>
-              </div>
-
-              <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                {prompt.description}
-              </p>
-
-              {/* Stats */}
-              <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 text-yellow-400" />
-                  <span>{prompt.rating}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Download className="h-4 w-4" />
-                  <span>{prompt.downloads}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  <span>2.1k views</span>
-                </div>
-              </div>
-
-              {/* Author */}
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-slate-400">
-                  by <span className="text-white">{prompt.author}</span>
-                </div>
-                <button className="bg-[#2563eb] hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                  View Details
-                </button>
-              </div>
-            </div>
-          </div>
+          <PromptCard key={prompt.id} {...prompt} />
         ))}
       </div>
 
