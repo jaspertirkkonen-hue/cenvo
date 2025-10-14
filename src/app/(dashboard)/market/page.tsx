@@ -1,76 +1,116 @@
+'use client'
+import { useState, useEffect } from 'react'
 import { Search, Filter } from 'lucide-react'
 import { PromptCard } from '@/components/cards/PromptCard'
+import { supabase } from '@/lib/supabase/client'
 
 export default function MarketPage() {
-  const prompts = [
-    {
-      id: 1,
-      title: 'AI Content Writer Pro',
-      description: 'Advanced content generation with SEO optimization and brand voice consistency.',
-      category: 'Writing',
-      price: 29.99,
-      rating: 4.8,
-      downloads: 1247,
-      author: 'AI Expert',
-      image: '/images/ux.jpg'
-    },
-    {
-      id: 2,
-      title: 'Image Generator Master',
-      description: 'Create stunning visuals with detailed prompts for any style or concept.',
-      category: 'Art',
-      price: 19.99,
-      rating: 4.9,
-      downloads: 2156,
-      author: 'Creative Pro',
-      image: '/images/curated.jpg'
-    },
-    {
-      id: 3,
-      title: 'Code Debugger Assistant',
-      description: 'Debug and optimize code with intelligent error detection and solutions.',
-      category: 'Development',
-      price: 39.99,
-      rating: 4.7,
-      downloads: 892,
-      author: 'Dev Master',
-      image: '/images/secure.jpg'
-    },
-    {
-      id: 4,
-      title: 'Business Strategy Planner',
-      description: 'Comprehensive business planning with market analysis and growth strategies.',
-      category: 'Business',
-      price: 49.99,
-      rating: 4.6,
-      downloads: 634,
-      author: 'Strategy Expert',
-      image: '/images/pitch.jpg'
-    },
-    {
-      id: 5,
-      title: 'Crypto Trading Bot',
-      description: 'Automated trading strategies with risk management and market analysis.',
-      category: 'Finance',
-      price: 79.99,
-      rating: 4.5,
-      downloads: 423,
-      author: 'Crypto Pro'
-    },
-    {
-      id: 6,
-      title: 'Global Market Analyzer',
-      description: 'Real-time market analysis with global economic indicators and trends.',
-      category: 'Finance',
-      price: 59.99,
-      rating: 4.8,
-      downloads: 756,
-      author: 'Market Expert',
-      image: '/images/global.jpg'
-    }
-  ]
+  const [prompts, setPrompts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
 
   const categories = ['All', 'Writing', 'Art', 'Development', 'Business', 'Finance']
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        let query = supabase
+          .from('prompts')
+          .select('id, title, description, price, image_url, rating, downloads, created_at, category, status')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false })
+
+        // Filter by category if not 'All'
+        if (selectedCategory !== 'All') {
+          query = query.eq('category', selectedCategory)
+        }
+
+        const { data, error } = await query
+
+        if (error) throw error
+        setPrompts(data || [])
+      } catch (err: any) {
+        console.error('Error fetching prompts:', err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPrompts()
+
+    // Real-time subscription for new prompts
+    const channel = supabase
+      .channel('realtime:prompts')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'prompts' },
+        (payload) => {
+          if (payload.new.status === 'published') {
+            setPrompts((prev) => [payload.new, ...prev])
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'prompts' },
+        (payload) => {
+          setPrompts((prev) =>
+            prev.map((p) => (p.id === payload.new.id ? payload.new : p))
+          )
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'prompts' },
+        (payload) => {
+          setPrompts((prev) => prev.filter((p) => p.id !== payload.old.id))
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [selectedCategory])
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563eb] mx-auto mb-4"></div>
+          <p className="text-slate-400">Loading marketplace...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-12">
+          <p className="text-red-400 mb-4">Error loading prompts: {error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-[#2563eb] hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Filter by search term
+  const filteredPrompts = prompts.filter((prompt) =>
+    prompt.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    prompt.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <div className="p-6">
@@ -89,6 +129,8 @@ export default function MarketPage() {
             <input
               type="text"
               placeholder="Search prompts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 pl-10 pr-4 text-white placeholder-slate-400 focus:outline-none focus:border-[#2563eb]"
             />
           </div>
@@ -98,8 +140,9 @@ export default function MarketPage() {
             {categories.map((category) => (
               <button
                 key={category}
+                onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  category === 'All'
+                  category === selectedCategory
                     ? 'bg-[#2563eb] text-white'
                     : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                 }`}
@@ -118,18 +161,31 @@ export default function MarketPage() {
       </div>
 
       {/* Prompts Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {prompts.map((prompt) => (
-          <PromptCard key={prompt.id} {...prompt} />
-        ))}
-      </div>
-
-      {/* Load More */}
-      <div className="text-center mt-12">
-        <button className="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-          Load More Prompts
-        </button>
-      </div>
+      {filteredPrompts.length > 0 ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPrompts.map((prompt) => (
+            <PromptCard 
+              key={prompt.id} 
+              id={prompt.id}
+              title={prompt.title}
+              description={prompt.description}
+              price={prompt.price}
+              imageUrl={prompt.image_url}
+              rating={prompt.rating}
+              downloads={prompt.downloads}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-slate-400 mb-4">
+            {searchTerm ? 'No prompts found matching your search.' : 'No prompts available yet.'}
+          </p>
+          <p className="text-slate-500 text-sm">
+            {searchTerm ? 'Try a different search term.' : 'Check back soon for new prompts!'}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

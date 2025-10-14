@@ -54,12 +54,20 @@ export const PromptCard = memo(function PromptCard({ id, title, description, pri
             )}
           </div>
         </div>
-        <Link
-          href={`/market/${id}`}
-          className="mt-4 w-full bg-[#2563eb] hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 text-center focus-ring inline-block"
-        >
-          View Details
-        </Link>
+        <div className="mt-4 flex gap-2">
+          <Link
+            href={`/market/${id}`}
+            className="flex-1 border border-slate-600 hover:border-slate-500 text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 text-center focus-ring inline-block"
+          >
+            View Details
+          </Link>
+          <button
+            className="flex-1 bg-[#2563eb] hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 focus-ring"
+            aria-label={`Buy ${title} for $${price.toFixed(2)}`}
+          >
+            Buy Prompt
+          </button>
+        </div>
       </div>
     </article>
   )

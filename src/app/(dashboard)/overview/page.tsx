@@ -32,24 +32,24 @@ export default function OverviewPage() {
           return
         }
 
-        // Fetch user prompts
-        const { data: prompts } = await supabase
+        // Fetch user's own prompts
+        const { data: myPrompts } = await supabase
           .from('prompts')
-          .select('*')
+          .select('id, title, description, price, sales, created_at, status, image_url')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
 
-        // Fetch user purchases
+        // Fetch user purchases with prompt details
         const { data: purchases } = await supabase
           .from('purchases')
-          .select('*')
+          .select('id, created_at, price, prompts(title)')
           .eq('buyer_id', user.id)
           .order('created_at', { ascending: false })
           .limit(5)
 
         // Calculate stats
-        const totalPrompts = prompts?.length || 0
-        const totalSales = (prompts || []).reduce((sum, p: any) => sum + ((p.sales || 0) * (p.price || 0)), 0)
+        const totalPrompts = myPrompts?.length || 0
+        const totalSales = (myPrompts || []).reduce((sum, p: any) => sum + ((p.sales || 0) * (p.price || 0)), 0)
         const totalPurchases = purchases?.length || 0
         const balance = totalSales * 0.9 // After 10% fee
 
@@ -58,19 +58,19 @@ export default function OverviewPage() {
           totalSales,
           totalPurchases,
           balance,
-          latestPrompt: prompts?.[0] || null
+          latestPrompt: myPrompts?.[0] || null
         })
 
         // Set recent activity
         const activities = [
-          ...(prompts || []).slice(0, 2).map((p: any) => ({
+          ...(myPrompts || []).slice(0, 2).map((p: any) => ({
             type: 'prompt',
             title: `New prompt "${p.title}" added`,
             time: new Date(p.created_at).toLocaleDateString() || 'Recently'
           })),
           ...(purchases || []).slice(0, 2).map((p: any) => ({
             type: 'purchase',
-            title: 'Prompt purchased',
+            title: `Purchased: ${p.prompts?.title || 'Prompt'}`,
             time: new Date(p.created_at).toLocaleDateString() || 'Recently'
           }))
         ]
