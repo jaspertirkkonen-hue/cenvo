@@ -35,7 +35,7 @@ export default function OverviewPage() {
         // Fetch user's own prompts
         const { data: myPrompts } = await supabase
           .from('prompts')
-          .select('id, title, description, price, sales, created_at, status, image_url')
+          .select('id, title, description, price, sales, created_at, image_url')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
 

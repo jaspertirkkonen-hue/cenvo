@@ -31,7 +31,7 @@ export default function MyPromptsPage() {
         // Fetch user's prompts
         const { data, error } = await supabase
           .from('prompts')
-          .select('id, title, description, category, price, sales, status, created_at, downloads, image_url')
+          .select('id, title, description, category, price, sales, created_at, image_url')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
 
@@ -113,7 +113,7 @@ export default function MyPromptsPage() {
 
   const totalSales = prompts.reduce((sum, p) => sum + (p.sales || 0), 0)
   const totalRevenue = prompts.reduce((sum, p) => sum + ((p.sales || 0) * (p.price || 0)), 0)
-  const activePrompts = prompts.filter(p => p.status === 'Active' || p.status === 'published').length
+  const activePrompts = prompts.length // All fetched prompts are considered active
 
   return (
     <div className="p-6">
@@ -169,12 +169,8 @@ export default function MyPromptsPage() {
                   </div>
                 )}
                 <div className="absolute top-4 right-4">
-                  <div className={`px-2 py-1 rounded text-xs font-semibold ${
-                    prompt.status === 'Active' || prompt.status === 'published'
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-slate-500 text-white'
-                  }`}>
-                    {prompt.status === 'published' ? 'Active' : prompt.status}
+                  <div className="px-2 py-1 rounded text-xs font-semibold bg-green-500 text-white">
+                    Active
                   </div>
                 </div>
               </div>

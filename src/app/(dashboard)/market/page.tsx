@@ -21,8 +21,7 @@ export default function MarketPage() {
 
         let query = supabase
           .from('prompts')
-          .select('id, title, description, price, image_url, downloads, created_at, category, status')
-          .eq('status', 'published')
+          .select('id, title, description, price, image_url, created_at, category')
           .order('created_at', { ascending: false })
 
         // Filter by category if not 'All'
@@ -51,9 +50,7 @@ export default function MarketPage() {
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'prompts' },
         (payload) => {
-          if (payload.new.status === 'published') {
-            setPrompts((prev) => [payload.new, ...prev])
-          }
+          setPrompts((prev) => [payload.new, ...prev])
         }
       )
       .on(
@@ -171,7 +168,6 @@ export default function MarketPage() {
               description={prompt.description}
               price={prompt.price}
               imageUrl={prompt.image_url}
-              downloads={prompt.downloads}
             />
           ))}
         </div>
