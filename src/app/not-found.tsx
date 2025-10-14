@@ -1,43 +1,42 @@
-'use client'
 import Link from 'next/link'
-import { Home, LogIn, ArrowLeft } from 'lucide-react'
+import { Home, Search, ArrowLeft } from 'lucide-react'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#030712] flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center">
+    <div className="min-h-screen bg-[#0B0C10] flex items-center justify-center p-6">
+      <div className="text-center max-w-2xl">
+        {/* 404 with Quantum Blue gradient */}
         <div className="mb-8">
-          <div className="text-9xl font-bold text-[#2563eb] mb-4">404</div>
-          <h1 className="text-3xl font-bold text-white mb-4">Page Not Found</h1>
-          <p className="text-slate-400 text-lg">
-            Sorry, we couldn't find the page you're looking for.
+          <h1 className="text-9xl font-bold gradient-text mb-4">404</h1>
+          <h2 className="text-3xl font-bold text-[#E5E7EB] mb-4">Page Not Found</h2>
+          <p className="text-[#9CA3AF] text-lg">
+            The page you're looking for doesn't exist or has been moved.
           </p>
         </div>
-        
-        <div className="space-y-4">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors w-full justify-center"
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#4F46E5] to-[#0EA5E9] hover:shadow-[0_0_30px_rgba(79,70,229,0.35)] text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300"
           >
             <Home size={20} />
             Go Home
           </Link>
-          
-          <Link 
-            href="/login" 
-            className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors w-full justify-center"
+          <Link
+            href="/market"
+            className="inline-flex items-center justify-center gap-2 border border-slate-600 hover:border-[#4F46E5] text-[#E5E7EB] font-semibold px-8 py-3 rounded-xl transition-all duration-300"
           >
-            <LogIn size={20} />
-            Sign In
+            <Search size={20} />
+            Browse Marketplace
           </Link>
-          
-          <button 
-            onClick={() => window.history.back()} 
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors w-full justify-center"
-          >
-            <ArrowLeft size={20} />
-            Go Back
-          </button>
+        </div>
+
+        {/* Decorative Element */}
+        <div className="mt-12 flex justify-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-[#4F46E5] animate-pulse"></div>
+          <div className="w-3 h-3 rounded-full bg-[#0EA5E9] animate-pulse delay-100"></div>
+          <div className="w-3 h-3 rounded-full bg-[#4F46E5] animate-pulse delay-200"></div>
         </div>
       </div>
     </div>

@@ -1,7 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Search, Filter } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { PromptCard } from '@/components/cards/PromptCard'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { supabase } from '@/lib/supabase/client'
 
 export default function MarketPage() {
@@ -78,11 +80,12 @@ export default function MarketPage() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563eb] mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading marketplace...</p>
+      <div className="p-6">
+        <div className="mb-8">
+          <div className="h-10 bg-slate-800/50 rounded w-64 mb-2 skeleton"></div>
+          <div className="h-6 bg-slate-800/50 rounded w-96 skeleton"></div>
         </div>
+        <SkeletonLoader count={6} />
       </div>
     )
   }

@@ -7,7 +7,7 @@
     @apply border-slate-600;
   }
   body {
-    @apply bg-[#030712] text-[#f1f5f9];
+    @apply bg-[#0B0C10] text-[#E5E7EB];
   }
   
   /* Font optimization */
@@ -15,6 +15,18 @@
     font-display: swap;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Quantum Blue theme variables */
+  :root {
+    --bg-primary: #0B0C10;
+    --bg-secondary: #151821;
+    --gradient-accent: linear-gradient(90deg, #4F46E5, #0EA5E9);
+    --primary: #2563EB;
+    --primary-hover: #3B82F6;
+    --text-primary: #E5E7EB;
+    --text-secondary: #9CA3AF;
+    --glow-subtle: rgba(79, 70, 229, 0.35);
   }
 }
 
@@ -65,7 +77,26 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 0 30px var(--glow-subtle), 0 0 60px rgba(79, 70, 229, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  /* Quantum Blue gradient text */
+  .gradient-text {
+    background: linear-gradient(90deg, #4F46E5, #0EA5E9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Card tilt effect */
+  .card-tilt {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  
+  .card-tilt:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
   }
   
   /* Reduce motion for accessibility */
