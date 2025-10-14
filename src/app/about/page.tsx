@@ -1,4 +1,11 @@
-import { Calendar, Users, Target, Award } from 'lucide-react'
+import { Calendar, Users, Target, Award, ArrowRight, Rocket, Eye, Star } from 'lucide-react'
+import Link from 'next/link'
+import { TopNav } from '@/components/nav/TopNav'
+
+export const metadata = {
+  title: 'About - Cenvo',
+  description: 'We\'re building the future of AI prompt creation, one innovation at a time.',
+}
 
 export default function AboutPage() {
   const timeline = [
@@ -32,27 +39,28 @@ export default function AboutPage() {
     {
       title: 'Innovation',
       description: 'We constantly push the boundaries of what\'s possible with AI and prompt engineering.',
-      icon: '🚀'
+      icon: Rocket
     },
     {
       title: 'Community',
       description: 'Our users are at the heart of everything we do. We build for the community, by the community.',
-      icon: '🤝'
+      icon: Users
     },
     {
       title: 'Transparency',
       description: 'We believe in open communication and transparent practices in all our operations.',
-      icon: '🔍'
+      icon: Eye
     },
     {
       title: 'Excellence',
       description: 'We strive for excellence in every feature, every interaction, and every user experience.',
-      icon: '⭐'
+      icon: Star
     }
   ]
 
   return (
     <div className="min-h-screen bg-[#030712]">
+      <TopNav />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -81,7 +89,7 @@ export default function AboutPage() {
                 generation of AI creators to push the boundaries of what's possible.
               </p>
             </div>
-            <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8">
+            <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8">
               <h3 className="text-2xl font-bold text-white mb-4">By the Numbers</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
@@ -107,7 +115,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-[#0f172a]/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-white text-center mb-16">Our Journey</h2>
           <div className="space-y-8">
@@ -136,7 +144,9 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center">
-                <div className="text-4xl mb-4">{value.icon}</div>
+                <div className="w-16 h-16 bg-[#2563eb]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <value.icon className="h-8 w-8 text-[#2563eb]" />
+                </div>
                 <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
                 <p className="text-slate-400">{value.description}</p>
               </div>
@@ -146,25 +156,25 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-[#0f172a]/30">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Join Us?</h2>
           <p className="text-xl text-slate-300 mb-8">
             Be part of the future of AI prompt creation. Start your journey with Cenvo today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <Link 
               href="/register" 
               className="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
             >
               Get Started Free
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="/pricing" 
               className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
             >
               View Pricing
-            </a>
+            </Link>
           </div>
         </div>
       </section>

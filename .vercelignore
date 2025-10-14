@@ -1,0 +1,15 @@
+# Vercel ignore file
+.env.local
+.env*.local
+node_modules
+.next
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Old HTML files (legacy)
+*.html
+!public/*.html
+

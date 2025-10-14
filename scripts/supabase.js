@@ -51,7 +51,7 @@ async function signInWithOAuth(provider) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-            redirectTo: window.location.origin + '/overview.html',
+            redirectTo: 'https://cenvo.io/auth/callback',
         },
     });
     if (error) throw error;
@@ -284,10 +284,10 @@ async function getUserStats() {
 // Session management
 async function checkSessionAndRedirect() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session && !['/login.html', '/register.html'].includes(window.location.pathname)) {
-        window.location.href = '/login.html';
-    } else if (session && ['/login.html', '/register.html'].includes(window.location.pathname)) {
-        window.location.href = '/overview.html';
+    if (!session && !['/login', '/register'].includes(window.location.pathname)) {
+        window.location.href = '/login';
+    } else if (session && ['/login', '/register'].includes(window.location.pathname)) {
+        window.location.href = '/overview';
     }
     return !!session;
 }

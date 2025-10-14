@@ -1,5 +1,11 @@
 import Link from 'next/link'
-import { Check, Star } from 'lucide-react'
+import { Check, Star, ArrowRight } from 'lucide-react'
+import { TopNav } from '@/components/nav/TopNav'
+
+export const metadata = {
+  title: 'Pricing - Cenvo',
+  description: 'Choose the plan that fits your needs. Upgrade or downgrade at any time.',
+}
 
 export default function PricingPage() {
   const plans = [
@@ -52,8 +58,10 @@ export default function PricingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#030712] pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen bg-[#030712]">
+      <TopNav />
+      <div className="pt-32 pb-20">
+        <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-[#f1f5f9] mb-6">
@@ -137,6 +145,20 @@ export default function PricingPage() {
               <p className="text-slate-400">Yes, we offer a 30-day money-back guarantee for all plans.</p>
             </div>
           </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center mt-16">
+          <h2 className="text-3xl font-bold text-white mb-4">Still have questions?</h2>
+          <p className="text-slate-300 mb-8">Contact our sales team for personalized assistance</p>
+          <Link 
+            href="/contact" 
+            className="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            Contact Sales
+            <ArrowRight size={20} />
+          </Link>
+        </div>
         </div>
       </div>
     </div>
