@@ -15,12 +15,13 @@ const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1').then(mod =
 })
 
 export const metadata = {
-  title: 'Cenvo - AI Prompt Marketplace',
-  description: 'Power Generative AI With Your Data. Make the best models with the best data.',
+  title: 'Cenvo – AI Prompt Marketplace',
+  description: 'Buy and sell high-quality AI prompts. Power your generative AI applications with the best data.',
   openGraph: {
-    title: 'Cenvo - AI Prompt Marketplace',
-    description: 'Power Generative AI With Your Data',
+    title: 'Cenvo – AI Prompt Marketplace',
+    description: 'Buy and sell high-quality AI prompts. Power Generative AI With Your Data.',
     type: 'website',
+    url: 'https://cenvo.io',
   },
 }
 
