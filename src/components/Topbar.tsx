@@ -5,7 +5,7 @@ import { Button } from './Button'
 export function Topbar() {
   const signOut = async () => {
     await supabase.auth.signOut()
-    location.href = '/login'
+    location.href = '/' // Redirect to home after logout
   }
   return (
     <header className="h-16 pl-[92px] md:pl-[260px] flex items-center justify-between border-b border-slate-600/25 pr-4">

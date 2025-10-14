@@ -1,41 +1,36 @@
+import { memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, Download } from 'lucide-react'
-import { AiCard1 } from '@/components/graphics/AiCard1'
-import { AiCard2 } from '@/components/graphics/AiCard2'
 
 interface PromptCardProps {
   id: number
   title: string
   description: string
   price: number
-  imageUrl?: string
+  imageUrl?: string | null
   rating?: number
   downloads?: number
 }
 
-export function PromptCard({ id, title, description, price, imageUrl, rating, downloads }: PromptCardProps) {
-  const AiGraphic = id % 2 === 0 ? AiCard1 : AiCard2
+export const PromptCard = memo(function PromptCard({ id, title, description, price, imageUrl, rating, downloads }: PromptCardProps) {
+  // Use fallback AI preview image if no image provided
+  const displayImage = imageUrl || '/images/ai-preview.svg'
 
   return (
     <article 
       className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden flex flex-col hover:border-[#2563eb]/30 transition-all duration-300 shadow-lg hover-lift gpu-accelerated focus-within:ring-2 focus-within:ring-[#2563eb] focus-within:ring-offset-2 focus-within:ring-offset-[#030712]"
     >
-      <div className="relative h-40 w-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
-        {imageUrl ? (
-          <Image 
-            src={imageUrl} 
-            alt={`${title} preview`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center p-4" style={{ width: '100%', height: '160px' }}>
-            <AiGraphic />
-          </div>
-        )}
+      <div className="relative h-48 w-full bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden">
+        <Image 
+          src={displayImage} 
+          alt={`${title} preview`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+          loading="lazy"
+          quality={75}
+        />
       </div>
       <div className="p-6 flex-grow flex flex-col">
         <h3 className="text-xl font-semibold text-white mb-2 heading-tight">{title}</h3>
@@ -68,4 +63,4 @@ export function PromptCard({ id, title, description, price, imageUrl, rating, do
       </div>
     </article>
   )
-}
+})

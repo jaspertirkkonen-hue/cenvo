@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { LucideIcon } from 'lucide-react'
 
 interface KpiCardProps {
@@ -8,7 +9,7 @@ interface KpiCardProps {
   changeType?: 'positive' | 'negative' | 'neutral'
 }
 
-export function KpiCard({ label, value, icon: Icon, change, changeType = 'neutral' }: KpiCardProps) {
+export const KpiCard = memo(function KpiCard({ label, value, icon: Icon, change, changeType = 'neutral' }: KpiCardProps) {
   const changeColor = changeType === 'positive' ? 'text-green-400' : changeType === 'negative' ? 'text-red-400' : 'text-slate-400'
 
   return (
@@ -37,4 +38,4 @@ export function KpiCard({ label, value, icon: Icon, change, changeType = 'neutra
       </div>
     </article>
   )
-}
+})

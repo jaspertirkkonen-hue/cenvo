@@ -5,6 +5,9 @@ const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
   
+  // Standalone output for optimized Vercel deployment
+  output: 'standalone',
+  
   // Image optimization configuration
   images: {
     domains: ['mtaktjphgnamasbwlqqe.supabase.co'], // Add your Supabase storage domain

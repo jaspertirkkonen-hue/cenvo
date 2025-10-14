@@ -11,27 +11,45 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Cenvo - AI Prompt Marketplace',
+    default: 'Cenvo – AI Prompt Marketplace',
     template: '%s | Cenvo',
   },
-  description: 'Power Generative AI With Your Data. Make the best models with the best data.',
+  description: 'Buy and sell high-quality AI prompts. Power your generative AI applications with the best data.',
   metadataBase: new URL('https://cenvo.io'),
+  keywords: ['AI prompts', 'prompt marketplace', 'generative AI', 'ChatGPT prompts', 'AI tools'],
+  authors: [{ name: 'Cenvo' }],
   openGraph: {
-    title: 'Cenvo - AI Prompt Marketplace',
-    description: 'Power Generative AI With Your Data. Make the best models with the best data.',
+    title: 'Cenvo – AI Prompt Marketplace',
+    description: 'Buy and sell high-quality AI prompts. Power your generative AI applications.',
     url: 'https://cenvo.io',
     siteName: 'Cenvo',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/images/cenvo-logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Cenvo AI Prompt Marketplace',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cenvo - AI Prompt Marketplace',
-    description: 'Power Generative AI With Your Data',
+    title: 'Cenvo – AI Prompt Marketplace',
+    description: 'Buy and sell high-quality AI prompts',
+    images: ['/images/cenvo-logo.svg'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   viewport: {
     width: 'device-width',

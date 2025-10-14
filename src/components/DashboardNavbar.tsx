@@ -19,7 +19,7 @@ export function DashboardNavbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    window.location.href = '/login'
+    window.location.href = '/' // Redirect to home after logout
   }
 
   const navItems = [

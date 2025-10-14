@@ -38,7 +38,7 @@ export function Sidebar() {
 
   const logout = async () => {
     await supabase.auth.signOut()
-    location.href = '/login'
+    location.href = '/' // Redirect to home after logout
   }
 
   return (

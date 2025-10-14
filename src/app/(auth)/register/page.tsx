@@ -24,7 +24,7 @@ export default function RegisterPage() {
         }
       })
       if (error) throw error
-      router.replace('/overview')
+      router.replace('/overview') // Redirect to dashboard after registration
     } catch (e: any) {
       setError(e.message)
     } finally { 

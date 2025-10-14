@@ -1,11 +1,22 @@
 {
-  "buildCommand": "next build",
-  "framework": "nextjs",
-  "outputDirectory": ".next",
-  "rewrites": [
+  "version": 2,
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "https://cenvo.io"
+  },
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
+      ]
     }
   ]
 }

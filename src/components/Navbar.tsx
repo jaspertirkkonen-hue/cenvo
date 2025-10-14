@@ -1,25 +1,56 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
+import { Menu, X, LogOut } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
 
-export function Navbar() {
+export const Navbar = memo(function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0)
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    // Check auth status
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+    checkAuth()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      subscription.unsubscribe()
+    }
   }, [])
 
-  const navLinks = [
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
+  // Conditional nav links based on auth
+  const navLinks = user ? [
+    { href: '/overview', label: 'Dashboard' },
+    { href: '/market', label: 'Market' },
+    { href: '/myprompts', label: 'My Prompts' },
+    { href: '/settings', label: 'Settings' },
+  ] : [
     { href: '/', label: 'Home' },
-    { href: '/pricing', label: 'Pricing' },
+    { href: '/market', label: 'Market' },
     { href: '/about', label: 'About' },
-    { href: '/login', label: 'Login' },
   ]
 
   return (
@@ -27,11 +58,11 @@ export function Navbar() {
       scrolled ? 'bg-[#030712]/90 backdrop-blur-sm shadow-lg border-b border-slate-800' : 'bg-transparent'
     }`}>
       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-white">
-          <div className="w-8 h-8 bg-[#2563eb] rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">C</span>
+        <Link href="/" className="flex items-center gap-3 text-2xl font-bold text-white focus-ring rounded-lg">
+          <div className="w-10 h-10 bg-[#2563eb] rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-lg">C</span>
           </div>
-          Cenvo
+          <span className="heading-tight">Cenvo</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -39,23 +70,44 @@ export function Navbar() {
             <Link 
               key={link.href} 
               href={link.href} 
-              className="text-slate-300 hover:text-white transition-colors"
+              className="text-slate-300 hover:text-white transition-colors focus-ring rounded px-2 py-1"
             >
               {link.label}
             </Link>
           ))}
-          <Link 
-            href="/register" 
-            className="bg-[#2563eb] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Get Started
-          </Link>
+          {!loading && (
+            user ? (
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-white font-semibold py-2 px-6 rounded-lg transition-colors focus-ring"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className="text-slate-300 hover:text-white transition-colors focus-ring rounded px-2 py-1"
+                >
+                  Login
+                </Link>
+                <Link 
+                  href="/register" 
+                  className="bg-[#2563eb] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors focus-ring shadow-lg"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )
+          )}
         </div>
 
         <div className="md:hidden flex items-center">
           <button 
             onClick={() => setMenuOpen(!menuOpen)} 
-            className="text-white focus:outline-none"
+            className="text-white focus:outline-none focus-ring p-2 rounded-lg"
+            aria-label="Toggle menu"
           >
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -69,22 +121,46 @@ export function Navbar() {
               <Link 
                 key={link.href} 
                 href={link.href} 
-                className="text-slate-300 hover:text-white transition-colors py-2"
+                className="text-slate-300 hover:text-white transition-colors py-2 focus-ring rounded px-4"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <Link 
-              href="/register" 
-              className="bg-[#2563eb] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors text-center"
-              onClick={() => setMenuOpen(false)}
-            >
-              Get Started
-            </Link>
+            {!loading && (
+              user ? (
+                <button
+                  onClick={() => {
+                    handleLogout()
+                    setMenuOpen(false)
+                  }}
+                  className="inline-flex items-center justify-center gap-2 border border-slate-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors text-center focus-ring"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="border border-slate-600 hover:border-slate-500 text-white font-semibold py-2 px-6 rounded-lg transition-colors text-center focus-ring"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="bg-[#2563eb] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors text-center focus-ring"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )
+            )}
           </div>
         </div>
       )}
     </header>
   )
-}
+})

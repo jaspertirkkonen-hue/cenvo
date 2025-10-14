@@ -1,8 +1,18 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Sparkles, Zap, Shield, CheckCircle, Users, Star } from 'lucide-react'
-import { MeshBG } from '@/components/graphics/MeshBG'
-import { AiCard1 } from '@/components/graphics/AiCard1'
+import dynamic from 'next/dynamic'
+
+// Dynamic imports for performance
+const MeshBG = dynamic(() => import('@/components/graphics/MeshBG').then(mod => ({ default: mod.MeshBG })), {
+  loading: () => <div className="w-full h-full bg-slate-900/20" />,
+  ssr: false
+})
+
+const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1').then(mod => ({ default: mod.AiCard1 })), {
+  loading: () => <div className="w-full h-full bg-slate-900/20 animate-pulse" />,
+  ssr: false
+})
 
 export const metadata = {
   title: 'Cenvo - AI Prompt Marketplace',
@@ -35,17 +45,17 @@ export default function HomePage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up delay-200">
                   <Link 
-                    href="/register" 
+                    href="/login" 
                     className="inline-flex items-center justify-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-200 shadow-lg hover-lift focus-ring"
                   >
                     <ArrowRight size={20} aria-hidden="true" />
-                    Get Started
+                    Login to Dashboard
                   </Link>
                   <Link 
-                    href="/pricing" 
+                    href="/market" 
                     className="inline-flex items-center justify-center gap-2 border border-slate-600 hover:border-slate-500 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-200 hover:bg-slate-800/30 focus-ring"
                   >
-                    Build AI
+                    Browse Marketplace
                   </Link>
                 </div>
               </div>
@@ -187,16 +197,16 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link 
-                href="/register" 
+                href="/login" 
                 className="bg-[#2563eb] hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 shadow-lg hover-lift text-lg focus-ring"
               >
-                Start Free Trial
+                Get Started Now
               </Link>
               <Link 
-                href="/pricing" 
+                href="/market" 
                 className="border border-slate-600 hover:border-slate-500 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:bg-slate-800/30 text-lg focus-ring"
               >
-                View Pricing
+                Explore Marketplace
               </Link>
             </div>
           </div>
@@ -218,9 +228,9 @@ export default function HomePage() {
               <nav aria-label="Product links">
                 <h3 className="text-white font-semibold mb-6 text-lg">Product</h3>
                 <ul className="space-y-4 text-slate-400">
-                  <li><Link href="/pricing" className="hover:text-white transition-colors focus-ring rounded">Pricing</Link></li>
-                  <li><Link href="/about" className="hover:text-white transition-colors focus-ring rounded">Features</Link></li>
                   <li><Link href="/market" className="hover:text-white transition-colors focus-ring rounded">Marketplace</Link></li>
+                  <li><Link href="/about" className="hover:text-white transition-colors focus-ring rounded">About</Link></li>
+                  <li><Link href="/login" className="hover:text-white transition-colors focus-ring rounded">Login</Link></li>
                 </ul>
               </nav>
               <nav aria-label="Company links">
