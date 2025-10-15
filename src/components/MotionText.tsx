@@ -72,7 +72,7 @@ export function MotionHeading({
   delay?: number
   stagger?: number
 }) {
-  const HeadingComponent = `h${level}` as keyof JSX.IntrinsicElements
+  const HeadingComponent = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
   
   const sizeClasses = {
     1: 'text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold heading-tighter',

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Sparkles, Zap, Shield, CheckCircle, Users, Star, Brain, Rocket, Globe } from 'lucide-react'
-import dynamic from 'next/dynamic'
+import dynamicImport from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { MotionCard } from '@/components/MotionCard'
 import { MotionButton } from '@/components/MotionButton'
@@ -9,12 +9,12 @@ import { MotionHeading, MotionText } from '@/components/MotionText'
 import { getHeroImage } from '@/lib/utils/unsplash'
 
 // Dynamic imports for performance
-const MeshBG = dynamic(() => import('@/components/graphics/MeshBG'), {
+const MeshBG = dynamicImport(() => import('@/components/graphics/MeshBG'), {
   loading: () => <div className="w-full h-full bg-cosmic-900/20" />,
   ssr: false
 })
 
-const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1'), {
+const AiCard1 = dynamicImport(() => import('@/components/graphics/AiCard1'), {
   loading: () => <div className="w-full h-full bg-cosmic-900/20 animate-pulse" />,
   ssr: false
 })
@@ -29,6 +29,8 @@ export const metadata = {
     url: 'https://cenvo.io',
   },
 }
+
+export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
   return (
@@ -92,12 +94,6 @@ export default function HomePage() {
                   variant="neon" 
                   delay={0.8}
                   className="w-full max-w-lg p-8"
-                  whileHover={{ 
-                    rotateY: 5,
-                    rotateX: 5,
-                    scale: 1.05,
-                    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
-                  }}
                 >
                   <div className="w-full h-80 relative overflow-hidden rounded-xl">
                     <Image 
@@ -145,14 +141,9 @@ export default function HomePage() {
                   variant="glass"
                   delay={0.4 + idx * 0.1}
                   className="p-8 text-center group"
-                  whileHover={{
-                    y: -8,
-                    scale: 1.02,
-                    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-                  }}
                 >
                   <div className={`w-20 h-20 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-celestial group-hover:shadow-celestial-strong transition-all duration-300`} aria-hidden="true">
-                    <feature.icon className="h-10 w-10 text-white" />
+                    <span className="text-white text-2xl">⚡</span>
                   </div>
                   <h3 className="text-2xl font-bold text-cosmic-100 mb-4 heading-tight">{feature.title}</h3>
                   <p className="text-cosmic-400 leading-relaxed">{feature.desc}</p>
@@ -197,13 +188,8 @@ export default function HomePage() {
                 >
                   <motion.div 
                     className="w-24 h-24 bg-gradient-celestial rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-celestial group-hover:shadow-celestial-strong transition-all duration-300 relative overflow-hidden"
-                    whileHover={{ 
-                      scale: 1.1,
-                      rotate: 5,
-                      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-                    }}
                   >
-                    <step.icon className="h-8 w-8 text-white z-10" />
+                    <span className="text-white text-xl z-10">🚀</span>
                     <span className="absolute top-2 right-2 text-white font-bold text-sm bg-white/20 rounded-full w-6 h-6 flex items-center justify-center">{step.num}</span>
                     
                     {/* Animated background */}
@@ -251,11 +237,6 @@ export default function HomePage() {
                   variant="glass"
                   delay={0.4 + idx * 0.1}
                   className="p-8 group"
-                  whileHover={{
-                    y: -8,
-                    scale: 1.02,
-                    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-                  }}
                 >
                   <div className="flex items-center gap-1 mb-6" aria-label="5 star rating">
                     {[...Array(5)].map((_, i) => (
@@ -264,9 +245,9 @@ export default function HomePage() {
                   </div>
                   
                   <blockquote className="text-cosmic-300 mb-8 leading-relaxed text-lg relative">
-                    <span className="text-4xl text-celestial-500/50 absolute -top-2 -left-2">"</span>
+                    <span className="text-4xl text-celestial-500/50 absolute -top-2 -left-2">&ldquo;</span>
                     {testimonial.quote}
-                    <span className="text-4xl text-celestial-500/50 absolute -bottom-4 -right-2">"</span>
+                    <span className="text-4xl text-celestial-500/50 absolute -bottom-4 -right-2">&rdquo;</span>
                   </blockquote>
                   
                   <div className="flex items-center gap-4">

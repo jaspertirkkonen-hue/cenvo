@@ -108,11 +108,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
               variant="glass"
               delay={0.4 + idx * 0.1}
               className="p-6 group"
-              whileHover={{
-                y: -4,
-                scale: 1.02,
-                transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-              }}
             >
               <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center mb-4 shadow-celestial group-hover:shadow-celestial-strong transition-all duration-300`}>
                 <Sparkles className="h-6 w-6 text-white" />
@@ -137,11 +132,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                 variant="glass"
                 delay={0.8 + idx * 0.1}
                 className="overflow-hidden group"
-                whileHover={{
-                  y: -8,
-                  scale: 1.02,
-                  transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-                }}
               >
                 {/* Image Section */}
                 <div className="h-48 relative overflow-hidden">
@@ -194,7 +184,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                         })
                         setShowCreate(true)
                       }}
-                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <Edit size={16} className="mr-1" />
@@ -205,7 +194,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                       variant="ghost"
                       size="sm"
                       onClick={() => copyToClipboard(prompt.template, 'Prompt template')}
-                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       {copiedText === 'Prompt template' ? <Check size={16} /> : <Copy size={16} />}
@@ -215,7 +203,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                       variant="ghost"
                       size="sm"
                       onClick={() => window.open(`/prompt/${prompt.id}`, '_blank')}
-                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <Eye size={16} />
@@ -240,7 +227,6 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                           }
                         }
                       }}
-                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <Trash2 size={16} />

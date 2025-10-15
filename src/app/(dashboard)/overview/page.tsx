@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import { getCachedUserPrompts } from '@/lib/cache/supabase-cache'
+import { createServerSupabase } from '@/lib/supabase/server'
 import { LazyWrapper } from '@/components/LazyWrapper'
 
 export const runtime = 'nodejs'
@@ -33,11 +33,22 @@ async function getUserData() {
 
 // Server component for fetching user stats
 async function getUserStats(userId: string) {
-  const [myPrompts, purchases] = await Promise.all([
-    getCachedUserPrompts(userId),
-    // Add cached purchases when available
-    Promise.resolve([])
+  const supabase = createServerSupabase()
+  
+  const [promptsResult, purchasesResult] = await Promise.all([
+    supabase
+      .from('prompts')
+      .select('id, title, description, price, sales, created_at, image_url, category, template')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('purchases')
+      .select('id, created_at, amount')
+      .eq('user_id', userId)
   ])
+
+  const myPrompts = promptsResult.data || []
+  const purchases = purchasesResult.data || []
 
   const totalPrompts = myPrompts?.length || 0
   const totalSales = (myPrompts || []).reduce((sum: number, p: any) => sum + ((p.sales || 0) * (p.price || 0)), 0)
@@ -58,7 +69,7 @@ export default async function OverviewPage() {
   
   if (!user) {
     return (
-      <Suspense fallback={<LazyWrapper />}>
+      <Suspense fallback={<LazyWrapper><div>Loading...</div></LazyWrapper>}>
         <OverviewClient user={null} stats={null} recentActivity={[]} />
       </Suspense>
     )
@@ -70,7 +81,7 @@ export default async function OverviewPage() {
   ])
 
   return (
-    <Suspense fallback={<LazyWrapper />}>
+    <Suspense fallback={<LazyWrapper><div>Loading...</div></LazyWrapper>}>
       <OverviewClient user={user} stats={stats} recentActivity={activities} />
     </Suspense>
   )

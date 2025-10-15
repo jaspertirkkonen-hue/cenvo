@@ -4,14 +4,11 @@ import { motion } from 'framer-motion'
 import { cn } from './cn'
 import { ReactNode } from 'react'
 
-interface MotionButtonProps {
+interface MotionButtonProps extends React.ComponentProps<typeof motion.button> {
   children: ReactNode
   className?: string
   variant?: 'primary' | 'secondary' | 'ghost' | 'neon'
   size?: 'sm' | 'md' | 'lg'
-  disabled?: boolean
-  onClick?: () => void
-  type?: 'button' | 'submit' | 'reset'
   delay?: number
 }
 
@@ -42,13 +39,11 @@ export function MotionButton({
   
   const hoverAnimation = {
     y: -2,
-    scale: 1.05,
-    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
+    scale: 1.05
   }
   
   const tapAnimation = {
-    scale: 0.95,
-    transition: { duration: 0.1 }
+    scale: 0.95
   }
 
   return (

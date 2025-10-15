@@ -45,8 +45,9 @@ const PROMPT_CATEGORIES = {
  * Generate a random AI-themed image URL from Unsplash
  */
 export function getRandomAIImage(width: number = 400, height: number = 300): string {
-  const keyword = AI_KEYWORDS[Math.floor(Math.random() * AI_KEYWORDS.length)]
-  return `${UNSPLASH_SOURCE}/${width}x${height}/?${keyword}&sig=${Math.random()}`
+  const index = Math.floor(Date.now() / 1000) % AI_KEYWORDS.length // Use timestamp for deterministic but varied results
+  const keyword = AI_KEYWORDS[index]
+  return `${UNSPLASH_SOURCE}/${width}x${height}/?${keyword}&sig=${index}`
 }
 
 /**
@@ -54,8 +55,9 @@ export function getRandomAIImage(width: number = 400, height: number = 300): str
  */
 export function getCategoryImage(category: string, width: number = 400, height: number = 300): string {
   const keywords = PROMPT_CATEGORIES[category as keyof typeof PROMPT_CATEGORIES] || ['technology']
-  const keyword = keywords[Math.floor(Math.random() * keywords.length)]
-  return `${UNSPLASH_SOURCE}/${width}x${height}/?${keyword}&sig=${Math.random()}`
+  const index = category.length % keywords.length // Use category length for deterministic selection
+  const keyword = keywords[index]
+  return `${UNSPLASH_SOURCE}/${width}x${height}/?${keyword}&sig=${category.length}`
 }
 
 /**
@@ -83,7 +85,8 @@ export function getHeroImage(section: 'marketplace' | 'chat' | 'overview' | 'myp
   }
   
   const keyword = heroImages[section]
-  return `${UNSPLASH_SOURCE}/1200x600/?${keyword}&sig=${Math.random()}`
+  const seed = section.charCodeAt(0) + section.length // Deterministic seed based on section name
+  return `${UNSPLASH_SOURCE}/1200x600/?${keyword}&sig=${seed}`
 }
 
 /**

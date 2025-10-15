@@ -35,7 +35,8 @@ export default function ChatPage() {
       id: Date.now(),
       sender: 'user',
       text: messageText,
-      timestamp: new Date()
+      timestamp: new Date(),
+      suggestions: []
     }
 
     setMessages(prev => [...prev, userMessage])

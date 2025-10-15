@@ -1,7 +1,8 @@
 'use client'
 
-import { Suspense, lazy, ComponentType, ReactNode } from 'react'
+import { Suspense, ReactNode } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 interface LazyWrapperProps {
   children: ReactNode
@@ -31,23 +32,6 @@ export function LazyWrapper({ children, fallback, delay = 0 }: LazyWrapperProps)
   )
 }
 
-/**
- * Higher-order component for lazy loading React components
- */
-export function withLazyLoading<T extends object>(
-  importFunc: () => Promise<{ default: ComponentType<T> }>,
-  fallback?: ReactNode
-) {
-  const LazyComponent = lazy(importFunc)
-
-  return function LazyLoadedComponent(props: T) {
-    return (
-      <LazyWrapper fallback={fallback}>
-        <LazyComponent {...props} />
-      </LazyWrapper>
-    )
-  }
-}
 
 /**
  * Lazy load images with intersection observer
@@ -56,11 +40,15 @@ export function LazyImage({
   src, 
   alt, 
   className, 
+  width,
+  height,
   ...props 
 }: {
   src: string
   alt: string
   className?: string
+  width?: number
+  height?: number
   [key: string]: any
 }) {
   return (
@@ -71,7 +59,14 @@ export function LazyImage({
       transition={{ duration: 0.5 }}
       viewport={{ once: true, margin: '50px' }}
     >
-      <img src={src} alt={alt} {...props} />
+      <Image 
+        src={src} 
+        alt={alt} 
+        width={width || 800}
+        height={height || 600}
+        className="w-full h-auto"
+        {...props} 
+      />
     </motion.div>
   )
 }

@@ -10,8 +10,6 @@ interface MotionCardProps {
   hover?: boolean
   delay?: number
   duration?: number
-  whileHover?: object
-  whileTap?: object
 }
 
 export function MotionCard({ 
@@ -20,9 +18,7 @@ export function MotionCard({
   variant = 'glass', 
   hover = true,
   delay = 0,
-  duration = 0.6,
-  whileHover,
-  whileTap
+  duration = 0.6
 }: MotionCardProps) {
   const baseClasses = 'relative overflow-hidden'
   
@@ -33,17 +29,6 @@ export function MotionCard({
   }
   
   const hoverClasses = hover ? 'gpu-accelerated' : ''
-  
-  const defaultHover = {
-    y: -8,
-    scale: 1.02,
-    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-  }
-  
-  const defaultTap = {
-    scale: 0.98,
-    transition: { duration: 0.1 }
-  }
 
   return (
     <motion.div
@@ -57,11 +42,8 @@ export function MotionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
         duration,
-        delay,
-        ease: [0.4, 0, 0.2, 1]
+        delay
       }}
-      whileHover={whileHover || defaultHover}
-      whileTap={whileTap || defaultTap}
       style={{ transformStyle: 'preserve-3d' }}
     >
       {/* Subtle inner glow */}
