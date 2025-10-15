@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
 import { ToastProvider } from '@/components/ToastProvider'
 import CommandPalette from '@/components/CommandPalette'
@@ -8,6 +8,13 @@ import CommandPalette from '@/components/CommandPalette'
 const inter = Inter({ 
   subsets: ['latin'], 
   variable: '--font-inter',
+  display: 'swap',
+  preload: true,
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
   display: 'swap',
   preload: true,
 })
@@ -78,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#030712" />
       </head>
-      <body className={`${inter.variable} font-sans min-h-screen bg-[#030712] text-[#f1f5f9] antialiased`}>
+      <body className={`${inter.variable} ${jakarta.variable} font-sans min-h-screen bg-[#030712] text-[#f1f5f9] antialiased`}>
         {/* Load Supabase and analytics scripts */}
         <Script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" strategy="afterInteractive" />
         <Script id="analytics-placeholder" strategy="lazyOnload">

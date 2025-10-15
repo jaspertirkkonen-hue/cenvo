@@ -34,6 +34,8 @@ export const PromptCard = memo(function PromptCard({ id, title, description, pri
           className="object-cover"
           loading="lazy"
           quality={75}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMzAwJyBoZWlnaHQ9JDE3MCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cmVjdCBmaWxsPSIjMTIxNDFCIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
         />
       </div>
       <div className="p-6 flex-grow flex flex-col">
