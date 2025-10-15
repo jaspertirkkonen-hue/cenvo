@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Star, Download, ShoppingCart, User, Calendar, Tag } from 'lucide-react'
 import { createServerSupabase } from '@/lib/supabase/server'
+import PromptPreview from '@/components/prompt/PromptPreview'
+import Recommendations from '@/components/prompt/Recommendations'
 export const runtime = 'nodejs'
 export const revalidate = 300
 
@@ -10,7 +12,7 @@ export default async function PromptDetailPage({ params }: { params: { id: strin
   const supabase = createServerSupabase()
   const { data: prompt } = await supabase
     .from('prompts')
-    .select('*')
+    .select('id, title, description, template, image_url, price, category, user_id, created_at')
     .eq('id', params.id)
     .single()
 
@@ -127,6 +129,12 @@ export default async function PromptDetailPage({ params }: { params: { id: strin
           </motion.div>
         </div>
       </motion.div>
+
+      <div className="mt-6">
+        <PromptPreview template={prompt.template || ''} defaultInput="" />
+      </div>
+
+      <Recommendations id={prompt.id} category={prompt.category || undefined} />
 
     </div>
   )

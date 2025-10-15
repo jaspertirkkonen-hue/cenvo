@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { z } from 'zod'
 import Image from 'next/image'
 import { Edit, Trash2, Eye, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
@@ -12,7 +13,7 @@ const AiCard2 = dynamic(() => import('@/components/graphics/AiCard2'), { ssr: fa
 export default function MyPromptsClient({ user, prompts: initialPrompts }: { user: any, prompts: any[] }) {
   const [prompts, setPrompts] = useState<any[]>(initialPrompts)
   const [showCreate, setShowCreate] = useState(false)
-  const [form, setForm] = useState({ title: '', description: '', price: '' })
+  const [form, setForm] = useState({ title: '', description: '', template: '', category: '', price: '', image_url: '' })
   const { show } = useToast()
 
   const totalSales = prompts.reduce((sum, p) => sum + (p.sales || 0), 0)
@@ -109,19 +110,38 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
             <div className="space-y-4">
               <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400 min-h-[120px]" />
+              <textarea value={form.template} onChange={(e) => setForm({ ...form, template: e.target.value })} placeholder="Prompt Template (what buyers will run)" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400 min-h-[120px]" />
+              <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Category" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
+              <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="Image URL (optional)" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
               <input value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="Price (USD)" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
             </div>
             <div className="mt-6 flex gap-3 justify-end">
               <button onClick={() => setShowCreate(false)} className="px-4 py-2 rounded-lg border border-slate-600 text-white">Cancel</button>
               <button onClick={async () => {
-                const title = form.title.trim()
-                const description = form.description.trim()
-                const priceNum = Number(form.price)
-                if (!title || !description || !Number.isFinite(priceNum) || priceNum < 0) { show('Please provide valid title, description, and price', 'error'); return }
+                const schema = z.object({
+                  title: z.string().min(3),
+                  description: z.string().min(20),
+                  template: z.string().min(20),
+                  category: z.string().min(1),
+                  price: z.string().transform((v) => Number(v)).refine((n) => Number.isFinite(n) && n >= 0, 'Price must be >= 0'),
+                  image_url: z.string().url().optional().or(z.literal('')),
+                })
+                const parsed = schema.safeParse(form)
+                if (!parsed.success) { show(parsed.error.issues[0]?.message || 'Invalid input', 'error'); return }
                 const { data: { user } } = await supabase.auth.getUser()
                 if (!user) { show('You must be logged in', 'error'); return }
-                const { error } = await supabase.from('prompts').insert({ title, description, price: priceNum, user_id: user.id, created_at: new Date().toISOString() })
-                if (error) { show('Failed to create prompt', 'error') } else { show('Prompt created successfully', 'success'); setShowCreate(false); setForm({ title: '', description: '', price: '' }) }
+                const payload: any = {
+                  title: parsed.data.title,
+                  description: parsed.data.description,
+                  template: parsed.data.template,
+                  category: parsed.data.category,
+                  price: parsed.data.price as unknown as number,
+                  user_id: user.id,
+                  created_at: new Date().toISOString(),
+                }
+                if (parsed.data.image_url) payload.image_url = parsed.data.image_url
+                const { data, error } = await supabase.from('prompts').insert([payload]).select().single()
+                if (error) { show('Failed to create prompt', 'error') } else { show('Prompt created successfully', 'success'); setShowCreate(false); setForm({ title: '', description: '', template: '', category: '', price: '', image_url: '' }); window.location.href = `/prompt/${data.id}` }
               }} className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-green-400">Create</button>
             </div>
           </div>
