@@ -7,7 +7,8 @@
     @apply border-slate-600;
   }
   body {
-    @apply bg-[#0B0C10] text-[#E5E7EB];
+    @apply text-[#E5E7EB];
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 50%, #020617 100%);
   }
   
   /* Font optimization */
@@ -17,16 +18,20 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Quantum Blue theme variables */
+  /* CENVO DEEP CORE theme variables */
   :root {
-    --bg-primary: #0B0C10;
+    --bg-dark: #0F172A;
+    --accent-primary: #3B82F6;
+    --accent-secondary: #10B981;
+    --glow: rgba(59,130,246,0.3);
+    --bg-primary: #0F172A;
     --bg-secondary: #151821;
-    --gradient-accent: linear-gradient(90deg, #4F46E5, #0EA5E9);
-    --primary: #2563EB;
-    --primary-hover: #3B82F6;
+    --gradient-accent: linear-gradient(90deg, #3B82F6, #10B981);
+    --primary: #3B82F6;
+    --primary-hover: #60A5FA;
     --text-primary: #E5E7EB;
     --text-secondary: #9CA3AF;
-    --glow-subtle: rgba(79, 70, 229, 0.35);
+    --glow-subtle: rgba(59,130,246,0.3);
   }
 }
 
@@ -77,13 +82,13 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 30px var(--glow-subtle), 0 0 60px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 0 30px var(--glow-subtle), 0 0 60px rgba(59,130,246,0.2);
     transform: translateY(-2px);
   }
   
   /* Quantum Blue gradient text */
   .gradient-text {
-    background: linear-gradient(90deg, #4F46E5, #0EA5E9);
+    background: linear-gradient(90deg, #3B82F6, #10B981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -4,7 +4,7 @@ import { TopNav } from '@/components/nav/TopNav'
 
 export const metadata = {
   title: 'About - Cenvo',
-  description: 'We\'re building the future of AI prompt creation, one innovation at a time.',
+  description: 'We\u2019re building the future of AI prompt creation, one innovation at a time.',
 }
 
 export default function AboutPage() {
@@ -68,7 +68,7 @@ export default function AboutPage() {
             About <span className="text-[#2563eb]">Cenvo</span>
           </h1>
           <p className="text-xl text-slate-300 mb-8">
-            We're building the future of AI prompt creation, one innovation at a time.
+            We&#39;re building the future of AI prompt creation, one innovation at a time.
           </p>
         </div>
       </section>
@@ -85,8 +85,8 @@ export default function AboutPage() {
                 discover, create, and share high-quality prompts.
               </p>
               <p className="text-lg text-slate-300">
-                We're not just building a marketplace – we're building a community that empowers the next 
-                generation of AI creators to push the boundaries of what's possible.
+                We&#39;re not just building a marketplace – we&#39;re building a community that empowers the next 
+                generation of AI creators to push the boundaries of what&#39;s possible.
               </p>
             </div>
             <div className="bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8">

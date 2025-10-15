@@ -1,6 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
+import { ToastProvider } from '@/components/ToastProvider'
+import CommandPalette from '@/components/CommandPalette'
 
 const inter = Inter({ 
   subsets: ['latin'], 
@@ -76,12 +79,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#030712" />
       </head>
       <body className={`${inter.variable} font-sans min-h-screen bg-[#030712] text-[#f1f5f9] antialiased`}>
+        {/* Load Supabase and analytics scripts */}
+        <Script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" strategy="afterInteractive" />
+        <Script id="analytics-placeholder" strategy="lazyOnload">
+          {`window.__CENVO_ANALYTICS__ = true;`}
+        </Script>
         <div className="fixed inset-0 -z-10" aria-hidden="true">
           <div className="absolute inset-0 opacity-60 will-change-transform bg-[radial-gradient(800px_600px_at_25%_35%,rgba(37,99,235,0.12),transparent_70%)]" />
         </div>
-        <div className="relative">
-          {children}
-        </div>
+        <ToastProvider>
+          <div className="relative">
+            <CommandPalette />
+            {children}
+          </div>
+        </ToastProvider>
       </body>
     </html>
   )

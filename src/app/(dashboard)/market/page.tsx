@@ -1,10 +1,14 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Search, Filter } from 'lucide-react'
 import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
 import { PromptCard } from '@/components/cards/PromptCard'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { supabase } from '@/lib/supabase/client'
+import { withCache, cacheKey } from '@/lib/cache'
+
+// runtime and ISR configured in segment layout
 
 export default function MarketPage() {
   const [prompts, setPrompts] = useState<any[]>([])
@@ -12,8 +16,14 @@ export default function MarketPage() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const observerRef = useRef<HTMLDivElement | null>(null)
 
   const categories = ['All', 'Writing', 'Art', 'Development', 'Business', 'Finance']
+
+  const TrendingPrompts = dynamic(() => import('@/components/sections/TrendingPrompts'), { ssr: false })
+  const TopCreators = dynamic(() => import('@/components/sections/TopCreators'), { ssr: false })
 
   useEffect(() => {
     const fetchPrompts = async () => {
@@ -21,20 +31,25 @@ export default function MarketPage() {
         setLoading(true)
         setError(null)
 
-        let query = supabase
-          .from('prompts')
-          .select('id, title, description, price, image_url, created_at, category')
-          .order('created_at', { ascending: false })
+        const cacheId = cacheKey(['prompts', selectedCategory, page])
+        const data = await withCache(cacheId, 10 * 60 * 1000, async () => {
+          let query = supabase
+            .from('prompts')
+            .select('id, title, description, price, image_url, created_at, category')
+            .order('created_at', { ascending: false })
+            .range((page - 1) * 12, page * 12 - 1)
 
-        // Filter by category if not 'All'
-        if (selectedCategory !== 'All') {
-          query = query.eq('category', selectedCategory)
-        }
+          if (selectedCategory !== 'All') {
+            query = query.eq('category', selectedCategory)
+          }
 
-        const { data, error } = await query
+          const { data, error } = await query
+          if (error) throw error
+          return data || []
+        })
 
-        if (error) throw error
-        setPrompts(data || [])
+        setPrompts((prev) => (page === 1 ? data : [...prev, ...data]))
+        setHasMore((data?.length || 0) === 12)
       } catch (err: any) {
         console.error('Error fetching prompts:', err)
         setError(err.message)
@@ -76,7 +91,28 @@ export default function MarketPage() {
     return () => {
       supabase.removeChannel(channel)
     }
+  }, [selectedCategory, page])
+
+  // Reset pagination when category changes
+  useEffect(() => {
+    setPage(1)
   }, [selectedCategory])
+
+  // Infinite scroll intersection observer
+  useEffect(() => {
+    const sentinel = observerRef.current
+    if (!sentinel) return
+
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries
+      if (entry.isIntersecting && hasMore && !loading) {
+        setPage((p) => p + 1)
+      }
+    }, { rootMargin: '200px' })
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, loading])
 
   if (loading) {
     return (
@@ -173,6 +209,8 @@ export default function MarketPage() {
               imageUrl={prompt.image_url}
             />
           ))}
+          {/* Infinite scroll sentinel */}
+          <div ref={observerRef} className="h-1" />
         </div>
       ) : (
         <div className="text-center py-12">
@@ -184,6 +222,15 @@ export default function MarketPage() {
           </p>
         </div>
       )}
+      {/* Sections: Trending and TopCreators */}
+      <div className="mt-12 space-y-12">
+        <Suspense fallback={<div className="h-64 rounded-2xl bg-slate-800/40 skeleton" />}> 
+          <TrendingPrompts />
+        </Suspense>
+        <Suspense fallback={<div className="h-40 rounded-2xl bg-slate-800/40 skeleton" />}> 
+          <TopCreators />
+        </Suspense>
+      </div>
     </div>
   )
 }

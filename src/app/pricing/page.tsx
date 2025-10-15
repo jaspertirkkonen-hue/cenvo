@@ -107,7 +107,7 @@ export default function PricingPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white mb-2">Can I get a refund?</h3>
-              <p className="text-slate-400">Yes, we offer refunds within 7 days if the prompt doesn't meet the description.</p>
+              <p className="text-slate-400">Yes, we offer refunds within 7 days if the prompt doesn&#39;t meet the description.</p>
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase/client'
 import { DollarSign, TrendingUp, MessageSquare, BarChart3, ShoppingCart, Package, Wallet, Activity } from 'lucide-react'
 import { KpiCard } from '@/components/cards/KpiCard'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { withCache, cacheKey } from '@/lib/cache'
+// runtime and ISR configured in segment layout
 
 // Sample chart data (will be replaced with real data)
 const mockChartData = [
@@ -37,19 +39,33 @@ export default function OverviewPage() {
         }
 
         // Fetch user's own prompts
-        const { data: myPrompts } = await supabase
-          .from('prompts')
-          .select('id, title, description, price, sales, created_at, image_url')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
+        const myPrompts = await withCache(
+          cacheKey(['overview-my-prompts', user.id]),
+          10 * 60 * 1000,
+          async () => {
+            const { data } = await supabase
+              .from('prompts')
+              .select('id, title, description, price, sales, created_at, image_url')
+              .eq('user_id', user.id)
+              .order('created_at', { ascending: false })
+            return data || []
+          }
+        )
 
         // Fetch user purchases with prompt details
-        const { data: purchases } = await supabase
-          .from('purchases')
-          .select('id, created_at, price, prompts(title)')
-          .eq('buyer_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(5)
+        const purchases = await withCache(
+          cacheKey(['overview-purchases', user.id]),
+          10 * 60 * 1000,
+          async () => {
+            const { data } = await supabase
+              .from('purchases')
+              .select('id, created_at, price, prompts(title)')
+              .eq('buyer_id', user.id)
+              .order('created_at', { ascending: false })
+              .limit(5)
+            return data || []
+          }
+        )
 
         // Calculate stats
         const totalPrompts = myPrompts?.length || 0
@@ -267,6 +283,17 @@ export default function OverviewPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* AI Insights Placeholder */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mt-6 bg-[#151821] backdrop-blur-sm border border-slate-700 rounded-xl p-6"
+      >
+        <h2 className="text-xl font-bold text-[#E5E7EB] mb-3">AI Insights</h2>
+        <p className="text-[#9CA3AF]">Your top-selling prompts and growth will appear here soon.</p>
+      </motion.div>
 
       {/* Latest Prompt */}
       {stats.latestPrompt && (

@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { User, Mail, Save, LogOut, Camera, Shield, Bell, Globe } from 'lucide-react'
+import Image from 'next/image'
 import { supabase } from '@/lib/supabase/client'
 
 export default function SettingsPage() {
@@ -103,14 +104,13 @@ export default function SettingsPage() {
                   />
                 </div>
                 {avatarUrl && (
-                  <div className="mt-3">
-                    <img 
+                  <div className="mt-3 relative h-16 w-16">
+                    <Image 
                       src={avatarUrl} 
                       alt="Avatar preview" 
-                      className="w-16 h-16 rounded-full object-cover border border-slate-600"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
+                      fill
+                      className="rounded-full object-cover border border-slate-600"
+                      sizes="64px"
                     />
                   </div>
                 )}

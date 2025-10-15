@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Star, Download, ShoppingCart, User, Calendar, Tag } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
+import { withCache, cacheKey } from '@/lib/cache'
+// runtime and ISR configured in segment layout
 
 export default function PromptDetailPage() {
   const params = useParams()
@@ -18,13 +20,19 @@ export default function PromptDetailPage() {
     const fetchPrompt = async () => {
       try {
         setLoading(true)
-        const { data, error } = await supabase
-          .from('prompts')
-          .select('*')
-          .eq('id', params.id)
-          .single()
-
-        if (error) throw error
+        const data = await withCache(
+          cacheKey(['prompt', params.id as any]),
+          10 * 60 * 1000,
+          async () => {
+            const { data, error } = await supabase
+              .from('prompts')
+              .select('*')
+              .eq('id', params.id)
+              .single()
+            if (error) throw error
+            return data
+          }
+        )
         setPrompt(data)
       } catch (error) {
         console.error('Error fetching prompt:', error)

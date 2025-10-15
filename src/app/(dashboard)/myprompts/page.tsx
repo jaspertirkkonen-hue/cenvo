@@ -4,6 +4,9 @@ import Image from 'next/image'
 import { Edit, Trash2, Eye, Download, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
+import { useToast } from '@/components/ToastProvider'
+import { withCache, cacheKey } from '@/lib/cache'
+// runtime and ISR configured in segment layout
 
 const AiCard1 = dynamic(() => import('@/components/graphics/AiCard1'), { ssr: false })
 const AiCard2 = dynamic(() => import('@/components/graphics/AiCard2'), { ssr: false })
@@ -12,6 +15,9 @@ export default function MyPromptsPage() {
   const [prompts, setPrompts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showCreate, setShowCreate] = useState(false)
+  const [form, setForm] = useState({ title: '', description: '', price: '' })
+  const { show } = useToast()
 
   useEffect(() => {
     const fetchMyPrompts = async () => {
@@ -28,15 +34,20 @@ export default function MyPromptsPage() {
           return
         }
 
-        // Fetch user's prompts
-        const { data, error } = await supabase
-          .from('prompts')
-          .select('id, title, description, category, price, sales, created_at, image_url')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-
-        if (error) throw error
-        setPrompts(data || [])
+        const data = await withCache(
+          cacheKey(['my-prompts', user.id]),
+          10 * 60 * 1000,
+          async () => {
+            const { data, error } = await supabase
+              .from('prompts')
+              .select('id, title, description, category, price, sales, created_at, image_url')
+              .eq('user_id', user.id)
+              .order('created_at', { ascending: false })
+            if (error) throw error
+            return data || []
+          }
+        )
+        setPrompts(data)
       } catch (err: any) {
         console.error('Error fetching my prompts:', err)
         setError(err.message)
@@ -123,7 +134,7 @@ export default function MyPromptsPage() {
           <h1 className="text-3xl font-bold text-white mb-2">My Prompts</h1>
           <p className="text-slate-400">Manage your uploaded AI prompts and track their performance</p>
         </div>
-        <button className="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+        <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-green-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] text-white px-6 py-3 rounded-lg font-semibold transition-all">
           <Plus size={20} />
           Create Prompt
         </button>
@@ -199,7 +210,7 @@ export default function MyPromptsPage() {
         </div>
       ) : (
         <div className="text-center py-12 bg-[#0f172a]/50 backdrop-blur-sm border border-slate-700 rounded-xl">
-          <p className="text-slate-400 mb-4">You haven't created any prompts yet.</p>
+          <p className="text-slate-400 mb-4">You haven&#39;t created any prompts yet.</p>
           <button className="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
             <Plus size={20} />
             Create Your First Prompt
@@ -220,6 +231,38 @@ export default function MyPromptsPage() {
           </div>
         </div>
       </div>
+
+    {/* Create Prompt Modal */}
+    {showCreate && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xl p-4" onClick={() => setShowCreate(false)}>
+        <div className="w-full max-w-lg bg-[#0f172a]/80 border border-slate-700 rounded-2xl p-6" onClick={(e) => e.stopPropagation()}>
+          <h3 className="text-xl font-bold text-white mb-4">Create Prompt</h3>
+          <div className="space-y-4">
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400 min-h-[120px]" />
+            <input value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="Price (USD)" className="w-full bg-slate-800 border border-slate-600 rounded-lg py-3 px-4 text-white placeholder-slate-400" />
+          </div>
+          <div className="mt-6 flex gap-3 justify-end">
+            <button onClick={() => setShowCreate(false)} className="px-4 py-2 rounded-lg border border-slate-600 text-white">Cancel</button>
+            <button onClick={async () => {
+              const title = form.title.trim()
+              const description = form.description.trim()
+              const priceNum = Number(form.price)
+              if (!title || !description || !Number.isFinite(priceNum) || priceNum < 0) {
+                show('Please provide valid title, description, and price', 'error')
+                return
+              }
+              const { data: { user } } = await supabase.auth.getUser()
+              if (!user) { show('You must be logged in', 'error'); return }
+              const { error } = await supabase.from('prompts').insert({
+                title, description, price: priceNum, user_id: user.id, created_at: new Date().toISOString()
+              })
+              if (error) { show('Failed to create prompt', 'error') } else { show('Prompt created successfully', 'success'); setShowCreate(false); setForm({ title: '', description: '', price: '' }) }
+            }} className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-green-400">Create</button>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
   )
 }
