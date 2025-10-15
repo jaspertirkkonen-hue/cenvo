@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { User, LogOut, Bell, Search, ShoppingBag, Heart, Plus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 
 export function DashboardNavbar() {
   const pathname = usePathname()
@@ -15,6 +15,7 @@ export function DashboardNavbar() {
 
   useEffect(() => {
     const getUser = async () => {
+      const supabase = supabaseBrowser()
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
     }
@@ -22,6 +23,7 @@ export function DashboardNavbar() {
   }, [])
 
   const handleLogout = async () => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signOut()
     window.location.href = '/'
   }

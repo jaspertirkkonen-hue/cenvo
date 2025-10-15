@@ -1,10 +1,10 @@
 import Image from 'next/image'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/serverClient'
 
 export const runtime = 'nodejs'
 
 export default async function Recommendations({ id, category }: { id: string; category?: string }) {
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   const cat = category || ''
   let query = supabase
     .from('prompts')

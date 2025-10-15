@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { PromptCard } from '@/components/cards/PromptCard'
 import { MotionCard } from '@/components/MotionCard'
 import { MotionButton } from '@/components/MotionButton'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 
 type Prompt = { id: number; title: string; description: string; price: number; image_url: string | null; category?: string | null }
 
@@ -31,6 +31,7 @@ export default function MarketClient({
   const TopCreators = dynamic(() => import('@/components/sections/TopCreators'), { ssr: false })
 
   useEffect(() => {
+    const supabase = supabaseBrowser()
     const channel = supabase
       .channel('realtime:prompts')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'prompts' }, (payload) => {
@@ -61,6 +62,7 @@ export default function MarketClient({
       setLoading(true)
       setError(null)
       try {
+        const supabase = supabaseBrowser()
         let query = supabase
           .from('prompts')
           .select('id, title, description, price, image_url, created_at, category')

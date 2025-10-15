@@ -5,8 +5,6 @@ import Script from 'next/script'
 import { ToastProvider } from '@/components/ToastProvider'
 import CommandPalette from '@/components/CommandPalette'
 
-export const runtime = 'nodejs'
-
 const inter = Inter({ 
   subsets: ['latin'], 
   variable: '--font-inter',

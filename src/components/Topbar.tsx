@@ -1,9 +1,10 @@
 'use client'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 import { Button } from './Button'
 
 export function Topbar() {
   const signOut = async () => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signOut()
     location.href = '/' // Redirect to home after logout
   }

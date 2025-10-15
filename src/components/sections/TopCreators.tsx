@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { CheckCircle2 } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 import { withCache, cacheKey } from '@/lib/cache'
 
 type Creator = {
@@ -25,6 +25,7 @@ export default function TopCreators() {
           cacheKey(['top-creators']),
           10 * 60 * 1000,
           async () => {
+            const supabase = supabaseBrowser()
             const { data, error } = await supabase
               .from('creator_stats')
               .select('user_id, name, avatar_url, verified, total_sales')

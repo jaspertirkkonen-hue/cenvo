@@ -1,12 +1,12 @@
 import dynamic from 'next/dynamic'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/serverClient'
 export const runtime = 'nodejs'
 export const revalidate = 300
 
 const MyPromptsClient = dynamic(() => import('./MyPromptsClient'), { ssr: false })
 
 export default async function MyPromptsPage() {
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   const { data: userData } = await supabase.auth.getUser()
   const user = userData?.user
   if (!user) return <MyPromptsClient user={null} prompts={[]} />

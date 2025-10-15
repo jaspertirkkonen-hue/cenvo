@@ -3,7 +3,7 @@ import { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X, LogOut } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 
 export const Navbar = memo(function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -19,6 +19,7 @@ export const Navbar = memo(function Navbar() {
     
     // Check auth status
     const checkAuth = async () => {
+      const supabase = supabaseBrowser()
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
@@ -26,6 +27,7 @@ export const Navbar = memo(function Navbar() {
     checkAuth()
 
     // Listen for auth changes
+    const supabase = supabaseBrowser()
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
@@ -37,6 +39,7 @@ export const Navbar = memo(function Navbar() {
   }, [])
 
   const handleLogout = async () => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signOut()
     window.location.href = '/'
   }

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { User, Mail, Save, LogOut, Camera, Shield, Bell, Globe } from 'lucide-react'
 import Image from 'next/image'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
@@ -13,6 +13,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const getUser = async () => {
+      const supabase = supabaseBrowser()
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       if (user) {
@@ -27,6 +28,7 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setIsLoading(true)
     try {
+      const supabase = supabaseBrowser()
       const { error } = await supabase.auth.updateUser({
         data: {
           username,
@@ -43,6 +45,7 @@ export default function SettingsPage() {
   }
 
   const handleLogout = async () => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signOut()
     window.location.href = '/' // Redirect to home after logout
   }

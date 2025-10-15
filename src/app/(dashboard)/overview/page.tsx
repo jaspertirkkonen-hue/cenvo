@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/serverClient'
 import { LazyWrapper } from '@/components/LazyWrapper'
 
 export const runtime = 'nodejs'
@@ -25,15 +25,14 @@ const OverviewClient = dynamic(() => import('./OverviewClient'), {
 
 // Server component for fetching user data
 async function getUserData() {
-  const { createServerSupabase } = await import('@/lib/supabase/server')
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   const { data: userData } = await supabase.auth.getUser()
   return userData?.user
 }
 
 // Server component for fetching user stats
 async function getUserStats(userId: string) {
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   
   const [promptsResult, purchasesResult] = await Promise.all([
     supabase

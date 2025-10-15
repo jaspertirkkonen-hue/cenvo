@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/serverClient'
 
 export const runtime = 'nodejs'
 export const revalidate = 300
@@ -7,7 +7,7 @@ export const revalidate = 300
 const MarketClient = dynamic(() => import('./MarketClient'), { ssr: false })
 
 export default async function MarketPage() {
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   
   // Fetch initial data directly from Supabase
   const [promptsResult, categoriesResult] = await Promise.all([

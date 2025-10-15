@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, ShoppingBag, Archive, MessageSquare, Settings, PanelLeftClose, PanelLeftOpen, LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 
 const items = [
   { href: '/overview', label: 'Overview', icon: Home },
@@ -22,6 +22,7 @@ export function Sidebar() {
   useEffect(() => {
     const e = localStorage.getItem('cenvo:sidebar:expanded')
     if (e) setExpanded(e === '1')
+    const supabase = supabaseBrowser()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
         setEmail(user.email || '')
@@ -37,6 +38,7 @@ export function Sidebar() {
   }
 
   const logout = async () => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signOut()
     location.href = '/' // Redirect to home after logout
   }

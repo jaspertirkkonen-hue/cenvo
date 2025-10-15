@@ -22,8 +22,8 @@ const CACHE_DURATIONS = {
  */
 export const getCachedPrompts = unstable_cache(
   async (page: number = 1, limit: number = 24, category?: string) => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     let query = supabase
       .from('prompts')
@@ -56,8 +56,8 @@ export const getCachedPrompts = unstable_cache(
  */
 export const getCachedTrendingPrompts = unstable_cache(
   async () => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     const { data, error } = await supabase
       .from('prompts')
@@ -84,8 +84,8 @@ export const getCachedTrendingPrompts = unstable_cache(
  */
 export const getCachedCategories = unstable_cache(
   async () => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     const { data, error } = await supabase
       .from('prompts')
@@ -113,8 +113,8 @@ export const getCachedCategories = unstable_cache(
  */
 export const getCachedPromptById = unstable_cache(
   async (id: number) => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     const { data, error } = await supabase
       .from('prompts')
@@ -141,8 +141,8 @@ export const getCachedPromptById = unstable_cache(
  */
 export const getCachedUserPrompts = unstable_cache(
   async (userId: string) => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     const { data, error } = await supabase
       .from('prompts')
@@ -180,8 +180,8 @@ export const invalidateCache = async (tags: string[]) => {
  */
 export const searchCachedPrompts = unstable_cache(
   async (searchTerm: string, limit: number = 24) => {
-    const { createServerSupabase } = await import('@/lib/supabase/server')
-    const supabase = createServerSupabase()
+    const { supabaseServer } = await import('@/lib/supabase/serverClient')
+    const supabase = supabaseServer()
     
     const { data, error } = await supabase
       .from('prompts')

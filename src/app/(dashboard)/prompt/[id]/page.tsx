@@ -2,14 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Star, Download, ShoppingCart, User, Calendar, Tag } from 'lucide-react'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/serverClient'
 import PromptPreview from '@/components/prompt/PromptPreview'
 import Recommendations from '@/components/prompt/Recommendations'
 export const runtime = 'nodejs'
 export const revalidate = 300
 
 export default async function PromptDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createServerSupabase()
+  const supabase = supabaseServer()
   const { data: prompt } = await supabase
     .from('prompts')
     .select('id, title, description, template, image_url, price, category, user_id, created_at')

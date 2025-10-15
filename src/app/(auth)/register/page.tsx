@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { UserPlus, Mail, Github, ArrowRight } from 'lucide-react'
@@ -16,6 +16,7 @@ export default function RegisterPage() {
     try {
       setLoading(true)
       setError(null)
+      const supabase = supabaseBrowser()
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,
@@ -39,6 +40,7 @@ export default function RegisterPage() {
   }
 
   const signInOAuth = async (provider: 'google' | 'github') => {
+    const supabase = supabaseBrowser()
     await supabase.auth.signInWithOAuth({
       provider,
       options: { 

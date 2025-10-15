@@ -3,7 +3,7 @@ import { useState, useRef } from 'react'
 import { z } from 'zod'
 import Image from 'next/image'
 import { Edit, Trash2, Eye, Plus, Save, Sparkles, Image as ImageIcon, Wand2, Copy, Check } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 import dynamic from 'next/dynamic'
 import { useToast } from '@/components/ToastProvider'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -214,6 +214,7 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                       className="text-red-400 hover:text-red-300"
                       onClick={async () => {
                         if (confirm('Are you sure you want to delete this prompt?')) {
+                          const supabase = supabaseBrowser()
                           const { error } = await supabase
                             .from('prompts')
                             .delete()
@@ -453,6 +454,7 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                       return 
                     }
                     
+                    const supabase = supabaseBrowser()
                     const { data: { user } } = await supabase.auth.getUser()
                     if (!user) { 
                       show('You must be logged in', 'error')
@@ -472,6 +474,7 @@ export default function MyPromptsClient({ user, prompts: initialPrompts }: { use
                     if (parsed.data.image_url) payload.image_url = parsed.data.image_url
                     
                     try {
+                      const supabase = supabaseBrowser()
                       let result
                       if (editingPrompt) {
                         result = await supabase

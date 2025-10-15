@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser } from '@/lib/supabase/browserClient'
 import { withCache, cacheKey } from '@/lib/cache'
 import { PromptCard } from '@/components/cards/PromptCard'
 
@@ -27,6 +27,7 @@ export default function TrendingPrompts() {
           cacheKey(['trending-prompts']),
           10 * 60 * 1000,
           async () => {
+            const supabase = supabaseBrowser()
             const { data, error } = await supabase
               .from('prompts')
               .select('id, title, description, price, image_url, downloads, rating')
