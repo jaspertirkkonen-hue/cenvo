@@ -8,6 +8,14 @@ const nextConfig = {
   // Standalone output for optimized Vercel deployment
   output: 'standalone',
   
+  // Experimental features
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+      allowedOrigins: ['*']
+    }
+  },
+  
   // Image optimization configuration
   images: {
     domains: ['mtaktjphgnamasbwlqqe.supabase.co'], // Add your Supabase storage domain

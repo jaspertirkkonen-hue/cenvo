@@ -8,6 +8,8 @@ import { MotionButton } from '@/components/MotionButton'
 import { MotionHeading, MotionText } from '@/components/MotionText'
 import { getHeroImage } from '@/lib/utils/unsplash'
 
+export const runtime = 'nodejs'
+
 // Dynamic imports for performance
 const MeshBG = dynamicImport(() => import('@/components/graphics/MeshBG'), {
   loading: () => <div className="w-full h-full bg-cosmic-900/20" />,
