@@ -66,6 +66,13 @@ export const metadata: Metadata = {
     initialScale: 1,
     maximumScale: 5,
   },
+  // Performance optimizations
+  other: {
+    'X-DNS-Prefetch-Control': 'on',
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'origin-when-cross-origin',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
